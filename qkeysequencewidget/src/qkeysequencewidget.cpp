@@ -29,7 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QDebug>
 #include <QEvent>
 #include <QKeyEvent>
-#include <QIcon>	
+#include <QIcon>
 
 #include "qkeysequencewidget_p.h"
 #include "qkeysequencewidget.h"
@@ -44,11 +44,11 @@ QKeySequenceWidget::QKeySequenceWidget(QWidget *parent) :
     d->q_ptr = this;
     d->init(QKeySequence(), QString());
 
-    _connectingSlots();    
+    _connectingSlots();
 }
 
 /*!
-  Creates a QKeySequenceWidget object wuth \a parent and keysequence \a keySequence 
+  Creates a QKeySequenceWidget object wuth \a parent and keysequence \a keySequence
   and string for \a noneString
 */
 QKeySequenceWidget::QKeySequenceWidget(QKeySequence seq, QString noneString, QWidget *parent) :
@@ -62,7 +62,7 @@ QKeySequenceWidget::QKeySequenceWidget(QKeySequence seq, QString noneString, QWi
 }
 
 /*!
-  Creates a QKeySequenceWidget object wuth \a parent and keysequence \a keySequence   
+  Creates a QKeySequenceWidget object wuth \a parent and keysequence \a keySequence
 */
 QKeySequenceWidget::QKeySequenceWidget(QKeySequence seq, QWidget *parent) :
         QWidget(parent), d_ptr(new QKeySequenceWidgetPrivate())
@@ -171,7 +171,10 @@ void QKeySequenceWidget::clearKeySequence()
     setKeySequence(QKeySequence());
 }
 
-// slot for capture key sequence starting (private)
+/*!
+ * Start process capturing key sequence.
+ * This slot is designed for software process capturing key sequence.
+ */
 void QKeySequenceWidget::captureKeySequence()
 {
     d_ptr->startRecording();
@@ -220,7 +223,7 @@ QIcon QKeySequenceWidget::clearButtonIcon() const
 
 // connection internal signals & slots
 void QKeySequenceWidget::_connectingSlots()
-{ 
+{
     // connect signals to slots
     connect(d_ptr->clearButton, SIGNAL(clicked()), this,
 SLOT(clearKeySequence()));
@@ -270,7 +273,7 @@ void QKeySequenceWidgetPrivate::init(const QKeySequence keySeq, const QString no
     q_ptr->clearKeySequence();
     currentSequence = keySeq;
 
-    shortcutButton->setFocusPolicy(Qt::StrongFocus);    
+    shortcutButton->setFocusPolicy(Qt::StrongFocus);
 
     layout->addWidget(shortcutButton);
 
@@ -339,7 +342,7 @@ void QKeySequenceWidgetPrivate::doneRecording()
 {
     modifierlessTimeout.stop();
 
-        if (isRecording == true)
+    if (isRecording == true)
     {
 	emit q_ptr->keySequenceAccepted(currentSequence);
     }
@@ -350,7 +353,7 @@ void QKeySequenceWidgetPrivate::doneRecording()
 	    emit q_ptr->keySequenceChanged(currentSequence);
 	}
     }
-    
+
     isRecording = false;
     shortcutButton->releaseKeyboard();
     shortcutButton->setDown(false);
@@ -426,8 +429,8 @@ void QKeySequenceWidgetPrivate::updateDisplayShortcut()
 
     // if is noting
     if (str.isEmpty() == true)
-    {	
-        str = noneSequenceText;        
+    {
+        str = noneSequenceText;
     }
 
     shortcutButton->setText(str);
