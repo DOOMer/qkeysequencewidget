@@ -147,8 +147,6 @@ void QKeySequenceWidget::setKeySequence(const QKeySequence& key)
         d_ptr->oldSequence = d_ptr->currentSequence;
     }
 
-    d_ptr->doneRecording();
-
     d_ptr->currentSequence = key;
     d_ptr->doneRecording();
 }
@@ -341,6 +339,18 @@ void QKeySequenceWidgetPrivate::doneRecording()
 {
     modifierlessTimeout.stop();
 
+        if (isRecording == true)
+    {
+	emit q_ptr->keySequenceAccepted(currentSequence);
+    }
+    else
+    {
+	if (oldSequence.isEmpty() != true)
+	{
+	    emit q_ptr->keySequenceChanged(currentSequence);
+	}
+    }
+    
     isRecording = false;
     shortcutButton->releaseKeyboard();
     shortcutButton->setDown(false);
@@ -353,9 +363,6 @@ void QKeySequenceWidgetPrivate::doneRecording()
 
         return;
     }
-
-    // key sequnce is changed
-    emit q_ptr->keySequenceChanged(currentSequence);
 
     // update Shortcut display
     updateDisplayShortcut();
