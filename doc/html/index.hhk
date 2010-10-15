@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML><HEAD></HEAD><BODY>
+<OBJECT type="text/site properties">
+<param name="FrameName" value="right">
+</OBJECT>
+<UL>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="clearButtonIcon"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="clearButtonShow"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="ClearButtonShow"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="clearKeySequence"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="keyNotSupported"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="keySequence"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="keySequenceChanged"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="license.html"><param name="Name" value="License"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="noneText"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="NoShow"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="QKeySequenceWidget"></OBJECT>
+  <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="clearButtonIcon"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="ClearButtonShow"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="clearButtonShow"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="clearKeySequence"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="keyNotSupported"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="keySequence"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="keySequenceChanged"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="noneText"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="NoShow"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="QKeySequenceWidget"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="setClearButtonIcon"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="setClearButtonShow"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="setKeySequence"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="setNoneText"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="setToolTip"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="ShowLeft"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="ShowRight"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="sizeHint"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="~QKeySequenceWidget"></OBJECT>
+  </UL>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="setClearButtonIcon"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="setClearButtonShow"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="setKeySequence"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="setNoneText"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="setToolTip"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="ShowLeft"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="ShowRight"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="sizeHint"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="using.html"><param name="Name" value="Using the QKeySequenceWidget"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_q_key_sequence_widget.html"><param name="Name" value="~QKeySequenceWidget"></OBJECT>
+</UL>
+</BODY>
+</HTML>

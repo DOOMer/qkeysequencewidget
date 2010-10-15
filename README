@@ -1,0 +1,49 @@
+QKeySequenceWidget 
+version 1.0
+
+The QKeySequenceWidget is a widget to input a QKeySequence.
+  
+This widget lets the user choose a QKeySequence, which is usually used as a
+shortcut key. The recording is initiated by calling captureKeySequence() or
+the user clicking into the widget. 
+
+The QKeySequenceWidget is based on code KKeySequenceWidget from KDE project.
+But it not needs kde libraries for building and working.
+
+Usage:
+
+For using QKeySequenceWidget in your qmake-based project you must copy  
+"qkeysequencewidget" directory to your source tree. And include 
+qkeysequencewidget.pri into your *.pro file.
+
+For example see projects in "demos" directoy .
+
+For using QKeySequenceWidget in your CMake-based project you must coy  
+"qkeysequencewidget" directory to your source tree. And include into main 
+CMakeLists.txt this strings:
+
+  add_subdirectory("path/to/qkeysequencewidget/")
+  include_directories("path/to/qkeysequencewidget/src")
+
+Then add "qkeysequencewidget" into target_link_libraries section for your project.
+
+For example, see CmakeLists.txt in current directoy.
+
+For using QKeySequenceWidget in QtDesigner you needs build designer-plugin. 
+This located in "designer-plugin" directory. 
+
+  qmake
+  make
+
+Installing QKeySeqenceWidgetPlughin^
+
+On Linux:
+  make install (as root)
+
+On Windows:
+  Copy QKeySequnceWidgetPlugin.dll to ${QT_DIR}/plugins/designer
+
+It builded only qmake, CMake not supported.
+
+Author: Artem Galichkin <doomer3d@gmail.com>
+Licence: BSD

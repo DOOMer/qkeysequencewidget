@@ -1,0 +1,145 @@
+/* -*- mode: C++ ; c-file-style: "stroustrup" -*- *****************************
+ * QKeySequenceWidget
+ *
+ * This is free software; you can redistribute it and/or
+ * modify it under the terms of the BSD License.
+ *****************************************************************************/
+
+/*
+  This file contains NO source code, just some documentation for doxygen to
+  parse.
+*/
+
+/*!
+  \mainpage QKeySequenceWidget
+
+  \section mainpage_overview Overview
+
+  The QKeySequenceWidget is a widget to input a QKeySequence.
+  
+  This widget lets the user choose a QKeySequence, which i	s usually used as a
+  shortcut key. The recording is initiated by calling captureKeySequence() or
+  the user clicking into the widget. 
+
+  The QKeySequenceWidget is based on code KKeySequenceWidget from KDE project.
+  But it not needs kde libraries for building and working.
+
+  \section mainpage_platforms Platforms
+
+  QKeySequenceWidget might be usable in all environments where you find <a href="http://qt.nokia.com/products/qt">Qt</a>.\n
+  QKeySequenceWidget requires Qt 4.5.x or newer.
+ 
+  \section mainpage_using How to use the QKeySequenceWidget
+
+  Read the page \ref using to obtain how to integrate SingleApplication with your project.
+  
+  \section mainpage_license License
+
+  QKeySequenceWidget is distributed under the terms of the BSD \ref license.
+
+  \section mainpage_contacts Author contacts
+
+  Author: Artem Galichkin
+
+    - E-mail: mailto:doomer3d@gmail.com
+    - Jabber: doomer@jabber.linux.it
+*/
+
+
+/*!
+  \page license License
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+    - * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    - * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    - * Neither the name of the <organization> nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+/*!
+  \page using Using the QKeySequenceWidget
+
+  How to use the QKeySequenceWidget
+
+  \section using_qmake In qmake-based projects 
+
+  For using QKeySequenceWidget in your qmake-based project you must copy  
+  \b "qkeysequencewidget" directory to your source tree. And include 
+  qkeysequencewidget.pri into your *.pro file.
+
+  For example see projects in "demos" directoy .
+  
+  \section using_qmake In CMake-based projects
+
+  For using QKeySequenceWidget in your CMake-based project you must coy  
+  "qkeysequencewidget" directory to your source tree. And include into main 
+  CMakeLists.txt this strings:
+
+    - \b add_subdirectory("path/to/qkeysequencewidget/")
+    - \b include_directories("path/to/qkeysequencewidget/src")
+
+  Then add \b "qkeysequencewidget" into target_link_libraries section for your project.
+
+  For example, see CmakeLists.txt in root directoy.
+
+
+  \section using_code Sample code
+  
+  This sample is shows a simple use of the widget in run-time.
+
+    \code
+    // create new QKeySequenceWidget with empty sequence
+    QKeySequenceWidget *keyWidget = new QKeySequenceWidget;
+    
+    // Set sequence as "Ctrl+Alt+Space"
+    keyWidget->setJeySequence(QKeySequence("Ctrl+Alt+Space"));
+    
+    // set clear button position is left
+    setClearButtonShow(QKeySequenceWidget::ShowLeft);
+    
+    // set cutom clear button icon
+    setClearButtonIcon(QIcon("/path/to/icon.png"));
+    
+    // connecting keySequenceChanged signal to slot
+    connect(keyWidget, SIGNAL(keySequenceChanged(QKeySequence)), this, SLOT(slotKeySequenceChanged(QKeySequence)));
+  \endcode 
+	
+
+  \section using_designerplugin Plugin for QtDesigner
+
+    For using QKeySequenceWidget in QtDesigner you needs build designer-plugin. 
+    This located in "designer-plugin" directory. 
+
+  - qmake
+  - make
+
+  Installing QKeySeqenceWidgetPlughin^
+
+  In Linux:
+
+  \b make \b install (as root)
+
+  In Windows:
+
+    Copy QKeySequnceWidgetPlugin.dll to \b ${QT_DIR}/plugins/designer
+
+  It builded only qmake, CMake not supported.	
+
+*/
