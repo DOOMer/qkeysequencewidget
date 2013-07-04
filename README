@@ -1,5 +1,5 @@
 QKeySequenceWidget 
-version 1.0
+version 1.0.1
 
 The QKeySequenceWidget is a widget to input a QKeySequence.
   
@@ -46,4 +46,9 @@ On Windows:
 It builded only qmake, CMake not supported.
 
 Author: Artem Galichkin <doomer3d@gmail.com>
-Licence: BSD
+Licence: BSD, GPLv3
+
+Changelog:
+
+v1.0.1 - Release under dual licensing, BSD and GPLv3
+v1.0. - first public release:
