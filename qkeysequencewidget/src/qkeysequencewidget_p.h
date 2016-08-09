@@ -82,6 +82,8 @@ public:
     // members
     QKeySequence currentSequence;
     QKeySequence oldSequence;
+    QKeySequence defaultSequence;
+    QAction *action;
     QString noneSequenceText;
 
     QTimer modifierlessTimeout;
@@ -89,7 +91,8 @@ public:
     quint32 numKey;
     quint32 modifierKeys;
 
-    void setToolTip(const QString& tip);
+    void setToolTip(const QString &shortcutButtonText = QString(""),
+                    const QString &clearButtonText = QString(""));
 
     QHBoxLayout *layout;
     QToolButton *clearButton;
@@ -99,6 +102,7 @@ public:
 
     bool isRecording;
 
+    void updateShortcutButtonColor();
 };
 
 class QShortcutButton : public QPushButton

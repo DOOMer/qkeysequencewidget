@@ -116,9 +116,10 @@ QSize QKeySequenceWidget::sizeHint() const
   Setting tooltip text to sequence button
   \param tip Text string
 */
-void QKeySequenceWidget::setToolTip(const QString &tip)
+void QKeySequenceWidget::setToolTip(const QString &shortcutButtonText,
+                                    const QString &clearButtonText)
 {
-    d_ptr->setToolTip(tip);
+    d_ptr->setToolTip(shortcutButtonText, clearButtonText);
 }
 
 /*!
@@ -133,7 +134,7 @@ void QKeySequenceWidget::setClearButtonShow(QKeySequenceWidget::ClearButtonShow 
 }
 
 /*!
-  Return mode of clear button dosplay.
+  Return mode of clear button display.
   \param show Display mode of clear button (NoShow, ShowLeft or ShorRight)
   \sa setClearButtonShow
 */
@@ -156,7 +157,26 @@ void QKeySequenceWidget::setKeySequence(const QKeySequence& key)
     }
 
     d_ptr->currentSequence = key;
+    d_ptr->updateShortcutButtonColor();
     d_ptr->doneRecording();
+}
+
+/*!
+    Set the default key sequence.
+    \param key Key sequence
+ */
+void QKeySequenceWidget::setDefaultKeySequence(const QKeySequence& key)
+{
+    d_ptr->defaultSequence = key;
+}
+
+/*!
+    Set the action.
+    \param action action
+ */
+void QKeySequenceWidget::setAction(QAction *action)
+{
+    d_ptr->action = action;
 }
 
 /*!
@@ -171,12 +191,38 @@ QKeySequence QKeySequenceWidget::keySequence() const
 }
 
 /*!
+    Get default key sequence.
+    \return Default key sequence
+    \sa setDefaultKeySequence
+ */
+QKeySequence QKeySequenceWidget::defaultKeySequence() const
+{
+    return d_ptr->defaultSequence;
+}
+
+/*!
+    Get action.
+    \return action
+ */
+QAction *QKeySequenceWidget::action()
+{
+    return d_ptr->action;
+}
+
+/*!
     Clear key sequence.
     \sa setKeySequence
  */
 void QKeySequenceWidget::clearKeySequence()
 {
     d_ptr->clearSequence();
+    d_ptr->updateShortcutButtonColor();
+
+    // reset the shortcut of the action
+//    if (d_ptr->action != Q_NULLPTR)
+//    {
+//        d_ptr->action->setShortcut(d_ptr->defaultSequence);
+//    }
 }
 
 /*!
@@ -247,6 +293,7 @@ QKeySequenceWidgetPrivate::QKeySequenceWidgetPrivate()
 {
     Q_Q(QKeySequenceWidget);
     Q_UNUSED(q);
+    defaultSequence = QKeySequence();
 }
 
 QKeySequenceWidgetPrivate::~QKeySequenceWidgetPrivate()
@@ -298,11 +345,12 @@ void QKeySequenceWidgetPrivate::init(const QKeySequence keySeq, const QString no
     updateView();
 }
 
-// set tooltip only for seqyence button
-void QKeySequenceWidgetPrivate::setToolTip(const QString &tip)
+// set tooltip only for the buttons
+void QKeySequenceWidgetPrivate::setToolTip(const QString &shortcutButtonText,
+                                           const QString &clearButtonText)
 {
-    shortcutButton->setToolTip(tip);
-    clearButton->setToolTip("");
+    shortcutButton->setToolTip(shortcutButtonText);
+    clearButton->setToolTip(clearButtonText);
 }
 
 // update the location of widgets
@@ -386,7 +434,9 @@ inline void QKeySequenceWidgetPrivate::cancelRecording()
 
 inline void QKeySequenceWidgetPrivate::clearSequence()
 {
-    q_ptr->setKeySequence(QKeySequence());
+    q_ptr->setKeySequence(q_ptr->defaultKeySequence().isEmpty() ?
+                          QKeySequence() :
+                          q_ptr->defaultKeySequence());
     emit q_ptr->keySequenceCleared();
 }
 
@@ -408,6 +458,22 @@ inline void QKeySequenceWidgetPrivate::controlModifierlessTimout()
 inline void QKeySequenceWidgetPrivate::keyNotSupported()
 {
     Q_EMIT q_ptr->keyNotSupported();
+}
+
+/*!
+    Updates the shortcut button color
+ */
+void QKeySequenceWidgetPrivate::updateShortcutButtonColor() {
+    QPalette palette;
+    QColor color = palette.color(
+            (!defaultSequence.isEmpty() && currentSequence == defaultSequence)
+            || currentSequence.isEmpty() ?
+            QPalette::Mid :
+            QPalette::Foreground);
+    QString colorName = color.name();
+
+    shortcutButton->setStyleSheet(
+            QString("QShortcutButton {color: %1}").arg(colorName));
 }
 
 void QKeySequenceWidgetPrivate::updateDisplayShortcut()
@@ -447,6 +513,15 @@ void QKeySequenceWidgetPrivate::updateDisplayShortcut()
     }
 
     shortcutButton->setText(str);
+
+    updateShortcutButtonColor();
+
+
+    // reset the shortcut of the action
+//    if (action != Q_NULLPTR)
+//    {
+//        action->setShortcut(currentSequence);
+//    }
 }
 
 

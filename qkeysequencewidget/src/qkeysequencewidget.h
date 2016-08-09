@@ -47,6 +47,7 @@ met: http://www.gnu.org/copyleft/gpl.html.
 
 #include <QWidget>
 #include <QIcon>
+#include <QAction>
 
 class QKeySequenceWidgetPrivate;
 
@@ -83,6 +84,7 @@ class QKeySequenceWidget : public QWidget
     Q_PRIVATE_SLOT(d_func(), void doneRecording())
 
     Q_PROPERTY(QKeySequence keySequence READ keySequence WRITE setKeySequence)
+    Q_PROPERTY(QKeySequence defaultKeySequence READ defaultKeySequence WRITE setDefaultKeySequence)
     Q_PROPERTY(QKeySequenceWidget::ClearButtonShow clearButton READ clearButtonShow WRITE setClearButtonShow)
     Q_PROPERTY(QString noneText READ noneText WRITE setNoneText)
     Q_PROPERTY(QIcon clearButtonIcon READ clearButtonIcon WRITE setClearButtonIcon)
@@ -98,8 +100,11 @@ public:
     explicit QKeySequenceWidget(QKeySequence seq, QString noneString, QWidget *parent = 0);
     virtual ~QKeySequenceWidget();
     QSize sizeHint() const;
-    void setToolTip(const QString &tip);
+    void setToolTip(const QString &shortcutButtonText = QString(""),
+                    const QString &clearButtonText = QString(""));
     QKeySequence keySequence() const;
+    QKeySequence defaultKeySequence() const;
+    QAction *action();
     QString noneText() const;
     QIcon clearButtonIcon() const;
 
@@ -125,6 +130,8 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void setKeySequence(const QKeySequence &key);
+    void setDefaultKeySequence(const QKeySequence &key);
+    void setAction(QAction *action);
     void clearKeySequence();
     void setNoneText(const QString text);
     void setClearButtonIcon(const QIcon& icon);
