@@ -262,6 +262,22 @@ SLOT(clearKeySequence()));
 
 }
 
+QColor QKeySequenceWidget::shortcutButtonActiveColor() const {
+    return d_ptr->shortcutButtonActiveColor;
+}
+
+QColor QKeySequenceWidget::shortcutButtonInactiveColor() const {
+    return d_ptr->shortcutButtonInactiveColor;
+}
+
+void QKeySequenceWidget::setShortcutButtonActiveColor(const QColor &color) {
+    d_ptr->shortcutButtonActiveColor = color;
+}
+
+void QKeySequenceWidget::setShortcutButtonInactiveColor(const QColor &color) {
+    d_ptr->shortcutButtonInactiveColor = color;
+}
+
 // Private class implementation
 
 QKeySequenceWidgetPrivate::QKeySequenceWidgetPrivate()
@@ -270,6 +286,10 @@ QKeySequenceWidgetPrivate::QKeySequenceWidgetPrivate()
     Q_Q(QKeySequenceWidget);
     Q_UNUSED(q);
     defaultSequence = QKeySequence();
+
+    QPalette palette;
+    shortcutButtonActiveColor = palette.color(QPalette::ButtonText);
+    shortcutButtonInactiveColor = palette.color(QPalette::Mid);
 }
 
 QKeySequenceWidgetPrivate::~QKeySequenceWidgetPrivate()
@@ -440,12 +460,10 @@ inline void QKeySequenceWidgetPrivate::keyNotSupported()
     Updates the shortcut button color
  */
 void QKeySequenceWidgetPrivate::updateShortcutButtonColor() {
-    QPalette palette;
-    QColor color = palette.color(
-            (!defaultSequence.isEmpty() && currentSequence == defaultSequence)
-            || currentSequence.isEmpty() ?
-            QPalette::Mid :
-            QPalette::Foreground);
+    QColor color = (!defaultSequence.isEmpty() &&
+            currentSequence == defaultSequence) || currentSequence.isEmpty() ?
+                   shortcutButtonInactiveColor :
+                   shortcutButtonActiveColor;
     QString colorName = color.name();
 
     shortcutButton->setStyleSheet(

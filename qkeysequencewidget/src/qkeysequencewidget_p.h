@@ -96,6 +96,8 @@ public:
     QHBoxLayout *layout;
     QToolButton *clearButton;
     QShortcutButton *shortcutButton;
+    QColor shortcutButtonActiveColor;
+    QColor shortcutButtonInactiveColor;
 
     int showClearButton;
 

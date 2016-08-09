@@ -84,6 +84,8 @@ class QKeySequenceWidget : public QWidget
 
     Q_PROPERTY(QKeySequence keySequence READ keySequence WRITE setKeySequence)
     Q_PROPERTY(QKeySequence defaultKeySequence READ defaultKeySequence WRITE setDefaultKeySequence)
+    Q_PROPERTY(QColor shortcutButtonActiveColor READ shortcutButtonActiveColor WRITE setShortcutButtonActiveColor)
+    Q_PROPERTY(QColor shortcutButtonInactiveColor READ shortcutButtonInactiveColor WRITE setShortcutButtonInactiveColor)
     Q_PROPERTY(QKeySequenceWidget::ClearButtonShow clearButton READ clearButtonShow WRITE setClearButtonShow)
     Q_PROPERTY(QString noneText READ noneText WRITE setNoneText)
     Q_PROPERTY(QIcon clearButtonIcon READ clearButtonIcon WRITE setClearButtonIcon)
@@ -103,6 +105,8 @@ public:
                     const QString &clearButtonText = QString(""));
     QKeySequence keySequence() const;
     QKeySequence defaultKeySequence() const;
+    QColor shortcutButtonActiveColor() const;
+    QColor shortcutButtonInactiveColor() const;
 
     QString noneText() const;
     QIcon clearButtonIcon() const;
@@ -130,6 +134,8 @@ Q_SIGNALS:
 public Q_SLOTS:
     void setKeySequence(const QKeySequence &key);
     void setDefaultKeySequence(const QKeySequence &key);
+    void setShortcutButtonActiveColor(const QColor &color);
+    void setShortcutButtonInactiveColor(const QColor &color);
 
     void clearKeySequence();
     void setNoneText(const QString text);
