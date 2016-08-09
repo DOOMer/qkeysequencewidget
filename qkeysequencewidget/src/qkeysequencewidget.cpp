@@ -171,15 +171,6 @@ void QKeySequenceWidget::setDefaultKeySequence(const QKeySequence& key)
 }
 
 /*!
-    Set the action.
-    \param action action
- */
-void QKeySequenceWidget::setAction(QAction *action)
-{
-    d_ptr->action = action;
-}
-
-/*!
     Get current key sequence.
     \return Current key sequence
     \sa setKeySequence
@@ -201,15 +192,6 @@ QKeySequence QKeySequenceWidget::defaultKeySequence() const
 }
 
 /*!
-    Get action.
-    \return action
- */
-QAction *QKeySequenceWidget::action()
-{
-    return d_ptr->action;
-}
-
-/*!
     Clear key sequence.
     \sa setKeySequence
  */
@@ -217,12 +199,6 @@ void QKeySequenceWidget::clearKeySequence()
 {
     d_ptr->clearSequence();
     d_ptr->updateShortcutButtonColor();
-
-    // reset the shortcut of the action
-//    if (d_ptr->action != Q_NULLPTR)
-//    {
-//        d_ptr->action->setShortcut(d_ptr->defaultSequence);
-//    }
 }
 
 /*!
@@ -515,13 +491,6 @@ void QKeySequenceWidgetPrivate::updateDisplayShortcut()
     shortcutButton->setText(str);
 
     updateShortcutButtonColor();
-
-
-    // reset the shortcut of the action
-//    if (action != Q_NULLPTR)
-//    {
-//        action->setShortcut(currentSequence);
-//    }
 }
 
 

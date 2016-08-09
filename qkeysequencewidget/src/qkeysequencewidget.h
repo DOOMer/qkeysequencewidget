@@ -47,7 +47,6 @@ met: http://www.gnu.org/copyleft/gpl.html.
 
 #include <QWidget>
 #include <QIcon>
-#include <QAction>
 
 class QKeySequenceWidgetPrivate;
 
@@ -104,7 +103,7 @@ public:
                     const QString &clearButtonText = QString(""));
     QKeySequence keySequence() const;
     QKeySequence defaultKeySequence() const;
-    QAction *action();
+
     QString noneText() const;
     QIcon clearButtonIcon() const;
 
@@ -131,7 +130,7 @@ Q_SIGNALS:
 public Q_SLOTS:
     void setKeySequence(const QKeySequence &key);
     void setDefaultKeySequence(const QKeySequence &key);
-    void setAction(QAction *action);
+
     void clearKeySequence();
     void setNoneText(const QString text);
     void setClearButtonIcon(const QIcon& icon);

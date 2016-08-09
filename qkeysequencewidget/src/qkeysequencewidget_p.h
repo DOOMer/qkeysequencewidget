@@ -83,7 +83,6 @@ public:
     QKeySequence currentSequence;
     QKeySequence oldSequence;
     QKeySequence defaultSequence;
-    QAction *action;
     QString noneSequenceText;
 
     QTimer modifierlessTimeout;
