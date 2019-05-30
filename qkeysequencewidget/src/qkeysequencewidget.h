@@ -96,9 +96,9 @@ private:
 
 public:
     explicit QKeySequenceWidget(QWidget *parent = 0);
-    explicit QKeySequenceWidget(QKeySequence seq, QWidget *parent = 0);
+    explicit QKeySequenceWidget(const QKeySequence& seq, QWidget *parent = 0);
     explicit QKeySequenceWidget(QString noneString, QWidget *parent = 0);
-    explicit QKeySequenceWidget(QKeySequence seq, QString noneString, QWidget *parent = 0);
+    explicit QKeySequenceWidget(const QKeySequence& seq, QString noneString, QWidget *parent = 0);
     virtual ~QKeySequenceWidget();
     QSize sizeHint() const;
     void setToolTip(const QString &shortcutButtonText = QString(""),
@@ -138,7 +138,7 @@ public Q_SLOTS:
     void setShortcutButtonInactiveColor(const QColor &color);
 
     void clearKeySequence();
-    void setNoneText(const QString text);
+    void setNoneText(const QString& text);
     void setClearButtonIcon(const QIcon& icon);
     void setClearButtonShow(QKeySequenceWidget::ClearButtonShow show);
     void captureKeySequence();

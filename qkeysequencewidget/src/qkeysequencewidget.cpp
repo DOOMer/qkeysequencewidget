@@ -47,6 +47,7 @@ met: http://www.gnu.org/copyleft/gpl.html.
 
 #include "qkeysequencewidget_p.h"
 #include "qkeysequencewidget.h"
+#include <utility>
 
 /*!
   Creates a QKeySequenceWidget object wuth \a parent and empty \a keySequence
@@ -65,19 +66,19 @@ QKeySequenceWidget::QKeySequenceWidget(QWidget *parent) :
   Creates a QKeySequenceWidget object wuth \a parent and keysequence \a keySequence
   and string for \a noneString
 */
-QKeySequenceWidget::QKeySequenceWidget(QKeySequence seq, QString noneString, QWidget *parent) :
+QKeySequenceWidget::QKeySequenceWidget(const QKeySequence& seq, QString noneString, QWidget *parent) :
         QWidget(parent), d_ptr(new QKeySequenceWidgetPrivate())
 {
     Q_D(QKeySequenceWidget);
     d->q_ptr = this;
-    d->init(seq, noneString);
+    d->init(seq, std::move(noneString));
     _connectingSlots();
 }
 
 /*!
   Creates a QKeySequenceWidget object wuth \a parent and keysequence \a keySequence
 */
-QKeySequenceWidget::QKeySequenceWidget(QKeySequence seq, QWidget *parent) :
+QKeySequenceWidget::QKeySequenceWidget(const QKeySequence& seq, QWidget *parent) :
         QWidget(parent), d_ptr(new QKeySequenceWidgetPrivate())
 {
     Q_D(QKeySequenceWidget);
@@ -94,7 +95,7 @@ QKeySequenceWidget::QKeySequenceWidget(QString noneString, QWidget *parent) :
 {
     Q_D(QKeySequenceWidget);
     d->q_ptr = this;
-    d->init(QKeySequence(), noneString);
+    d->init(QKeySequence(), std::move(noneString));
 
     _connectingSlots();
 }
@@ -151,7 +152,7 @@ QKeySequenceWidget::ClearButtonShow QKeySequenceWidget::clearButtonShow() const
  */
 void QKeySequenceWidget::setKeySequence(const QKeySequence& key)
 {
-    if (d_ptr->isRecording == false)
+    if (!d_ptr->isRecording)
     {
         d_ptr->oldSequence = d_ptr->currentSequence;
     }
@@ -215,7 +216,7 @@ void QKeySequenceWidget::captureKeySequence()
     \param text Text string
     \sa noneText
  */
-void QKeySequenceWidget::setNoneText(const QString text)
+void QKeySequenceWidget::setNoneText(const QString& text)
 {
     d_ptr->noneSequenceText = text;
     d_ptr->updateDisplayShortcut();
@@ -281,7 +282,7 @@ void QKeySequenceWidget::setShortcutButtonInactiveColor(const QColor &color) {
 // Private class implementation
 
 QKeySequenceWidgetPrivate::QKeySequenceWidgetPrivate()
-    : layout(NULL), clearButton(NULL), shortcutButton(NULL)
+    : layout(nullptr), clearButton(nullptr), shortcutButton(nullptr)
 {
     Q_Q(QKeySequenceWidget);
     Q_UNUSED(q);
@@ -297,7 +298,7 @@ QKeySequenceWidgetPrivate::~QKeySequenceWidgetPrivate()
 
 }
 
-void QKeySequenceWidgetPrivate::init(const QKeySequence keySeq, const QString noneStr)
+void QKeySequenceWidgetPrivate::init(const QKeySequence& keySeq, const QString& noneStr)
 {
     Q_Q(QKeySequenceWidget);
     Q_UNUSED(q);
@@ -312,7 +313,7 @@ void QKeySequenceWidgetPrivate::init(const QKeySequence keySeq, const QString no
 
     shortcutButton = new QShortcutButton(this, q_func());
 
-    if (noneStr.isNull() == true)
+    if (noneStr.isNull())
     {
         noneSequenceText = "...";
     }
@@ -394,13 +395,13 @@ void QKeySequenceWidgetPrivate::doneRecording()
 {
     modifierlessTimeout.stop();
 
-    if (isRecording == true)
+    if (isRecording)
     {
 	emit q_ptr->keySequenceAccepted(currentSequence);
     }
     else
     {
-	if (oldSequence.isEmpty() != true)
+	if (!oldSequence.isEmpty())
 	{
 	    emit q_ptr->keySequenceChanged(currentSequence);
 	}
@@ -476,11 +477,11 @@ void QKeySequenceWidgetPrivate::updateDisplayShortcut()
     QString str = currentSequence.toString(QKeySequence::NativeText);
     str.replace('&', QLatin1String("&&"));  // TODO -- check it
 
-    if (isRecording == true)
+    if (isRecording)
     {
         if (modifierKeys)
         {
-            if (str.isEmpty() == false)
+            if (!str.isEmpty())
                 str.append(",");
 
             if ((modifierKeys & Qt::META) )
@@ -501,7 +502,7 @@ void QKeySequenceWidgetPrivate::updateDisplayShortcut()
     }
 
     // if is noting
-    if (str.isEmpty() == true)
+    if (str.isEmpty())
     {
         str = noneSequenceText;
     }
@@ -520,7 +521,7 @@ QSize QShortcutButton::sizeHint() const
 
 bool QShortcutButton::event(QEvent *e)
 {
-    if (d->isRecording == true && e->type() == QEvent::KeyPress)
+    if (d->isRecording && e->type() == QEvent::KeyPress)
     {
         keyPressEvent(static_cast<QKeyEvent*>(e));
         return true;
@@ -532,7 +533,7 @@ bool QShortcutButton::event(QEvent *e)
         return true;
     }
 
-    if (d->isRecording == true && e->type() == QEvent::FocusOut)
+    if (d->isRecording && e->type() == QEvent::FocusOut)
     {
         d->cancelRecording();
         return true;
@@ -563,13 +564,13 @@ void QShortcutButton::keyPressEvent(QKeyEvent *keyEvent)
 | Qt::META);
 
     // block autostart capturing on key_return or key space press
-    if (d->isRecording == false && (keyQt == Qt::Key_Return || keyQt == Qt::Key_Space))
+    if (!d->isRecording && (keyQt == Qt::Key_Return || keyQt == Qt::Key_Space))
     {
         return;
     }
 
     // We get events even if recording isn't active.
-    if (d->isRecording == false)
+    if (!d->isRecording)
     {
         return QPushButton::keyPressEvent(keyEvent);
     }
@@ -636,7 +637,7 @@ void QShortcutButton::keyReleaseEvent(QKeyEvent *keyEvent)
     }
 
     // if not recording mode
-    if (d->isRecording == false)
+    if (!d->isRecording)
     {
         return QPushButton::keyReleaseEvent(keyEvent);
     }
