@@ -124,8 +124,8 @@ void QKeySequenceWidget::setToolTip(const QString &shortcutButtonText,
 }
 
 /*!
-  Setting mode of Clear Buttorn display.
-  \param show Position of clear button \a ClearButtornShow
+  Setting mode of Clear Button display.
+  \param show Position of clear button \a ClearButtonShow
   \sa clearButtonShow
 */
 void QKeySequenceWidget::setClearButtonShow(QKeySequenceWidget::ClearButtonShow show)
@@ -136,7 +136,7 @@ void QKeySequenceWidget::setClearButtonShow(QKeySequenceWidget::ClearButtonShow 
 
 /*!
   Return mode of clear button display.
-  \param show Display mode of clear button (NoShow, ShowLeft or ShorRight)
+  \param show Display mode of clear button (NoShow, ShowLeft or ShowRight)
   \sa setClearButtonShow
 */
 QKeySequenceWidget::ClearButtonShow QKeySequenceWidget::clearButtonShow() const
@@ -545,6 +545,15 @@ bool QShortcutButton::event(QEvent *e)
 void QShortcutButton::keyPressEvent(QKeyEvent *keyEvent)
 {
     int keyQt =  keyEvent->key();
+//    qDebug() << __func__ << " - 'keyQt': " << keyQt;
+    uint modifiers = keyEvent->modifiers();
+
+    // Workaround for Meta key
+    if (keyQt == Qt::Key_Super_L ) {
+        keyQt = Qt::Key_Meta;
+        // Doesn't seem to do anything
+//        modifiers |= Qt::META;
+    }
 
 // Qt sometimes returns garbage keycodes, I observed -1,
 // if it doesn't know a key.
@@ -553,14 +562,13 @@ void QShortcutButton::keyPressEvent(QKeyEvent *keyEvent)
 // and QKeySequence.toString() will also yield a garbage string.
     if (keyQt == -1)
     {
-        // keu moy supported in Qt
+        // key not supported in Qt
         d->cancelRecording();
         d->keyNotSupported();
-
     }
 
     //get modifiers key
-    uint newModifiers = keyEvent->modifiers() & (Qt::SHIFT | Qt::CTRL | Qt::ALT
+    uint newModifiers = modifiers & (Qt::SHIFT | Qt::CTRL | Qt::ALT
 | Qt::META);
 
     // block autostart capturing on key_return or key space press
@@ -614,7 +622,7 @@ void QShortcutButton::keyPressEvent(QKeyEvent *keyEvent)
                 d->currentSequence = QKeySequence(keyQt);
             }
 
-            d->numKey++; // increment nuber of pressed keys
+            d->numKey++; // increment number of pressed keys
 
             if (d->numKey >= 4)
             {
@@ -643,8 +651,18 @@ void QShortcutButton::keyReleaseEvent(QKeyEvent *keyEvent)
     }
 
     keyEvent->accept();
+    uint modifiers = keyEvent->modifiers();
 
-    uint newModifiers = keyEvent->modifiers() & (Qt::SHIFT | Qt::CTRL | Qt::ALT | Qt::META);
+    // Doesn't seem to to anything yet
+//    const int keyQt =  keyEvent->key();
+//
+//    if (keyQt == Qt::Key_Super_L ) {
+//        qDebug() << __func__ << " - 'modifiers before': " << modifiers;
+//        modifiers |= Qt::META;
+//        qDebug() << __func__ << " - 'modifiers after': " << modifiers;
+//    }
+
+    uint newModifiers = modifiers & (Qt::SHIFT | Qt::CTRL | Qt::ALT | Qt::META);
 
     // if a modifier that belongs to the shortcut was released...
     if ((newModifiers & d->modifierKeys) < d->modifierKeys)
