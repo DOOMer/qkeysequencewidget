@@ -59,7 +59,7 @@ class QKeySequenceWidget;
 class QKeySequenceWidgetPrivate // : public QObject
 {
     //Q_OBJECT
-    Q_DECLARE_PUBLIC(QKeySequenceWidget);
+    Q_DECLARE_PUBLIC(QKeySequenceWidget)
 
 public:
     QKeySequenceWidget * q_ptr;
