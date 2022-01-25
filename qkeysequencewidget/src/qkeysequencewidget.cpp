@@ -47,6 +47,7 @@ met: http://www.gnu.org/copyleft/gpl.html.
 
 #include "qkeysequencewidget_p.h"
 #include "qkeysequencewidget.h"
+#include <utility>
 
 /*!
   Creates a QKeySequenceWidget object wuth \a parent and empty \a keySequence
@@ -65,19 +66,19 @@ QKeySequenceWidget::QKeySequenceWidget(QWidget *parent) :
   Creates a QKeySequenceWidget object wuth \a parent and keysequence \a keySequence
   and string for \a noneString
 */
-QKeySequenceWidget::QKeySequenceWidget(QKeySequence seq, QString noneString, QWidget *parent) :
+QKeySequenceWidget::QKeySequenceWidget(const QKeySequence& seq, QString noneString, QWidget *parent) :
         QWidget(parent), d_ptr(new QKeySequenceWidgetPrivate())
 {
     Q_D(QKeySequenceWidget);
     d->q_ptr = this;
-    d->init(seq, noneString);
+    d->init(seq, std::move(noneString));
     _connectingSlots();
 }
 
 /*!
   Creates a QKeySequenceWidget object wuth \a parent and keysequence \a keySequence
 */
-QKeySequenceWidget::QKeySequenceWidget(QKeySequence seq, QWidget *parent) :
+QKeySequenceWidget::QKeySequenceWidget(const QKeySequence& seq, QWidget *parent) :
         QWidget(parent), d_ptr(new QKeySequenceWidgetPrivate())
 {
     Q_D(QKeySequenceWidget);
@@ -94,7 +95,7 @@ QKeySequenceWidget::QKeySequenceWidget(QString noneString, QWidget *parent) :
 {
     Q_D(QKeySequenceWidget);
     d->q_ptr = this;
-    d->init(QKeySequence(), noneString);
+    d->init(QKeySequence(), std::move(noneString));
 
     _connectingSlots();
 }
@@ -116,14 +117,15 @@ QSize QKeySequenceWidget::sizeHint() const
   Setting tooltip text to sequence button
   \param tip Text string
 */
-void QKeySequenceWidget::setToolTip(const QString &tip)
+void QKeySequenceWidget::setToolTip(const QString &shortcutButtonText,
+                                    const QString &clearButtonText)
 {
-    d_ptr->setToolTip(tip);
+    d_ptr->setToolTip(shortcutButtonText, clearButtonText);
 }
 
 /*!
-  Setting mode of Clear Buttorn display.
-  \param show Position of clear button \a ClearButtornShow
+  Setting mode of Clear Button display.
+  \param show Position of clear button \a ClearButtonShow
   \sa clearButtonShow
 */
 void QKeySequenceWidget::setClearButtonShow(QKeySequenceWidget::ClearButtonShow show)
@@ -133,8 +135,8 @@ void QKeySequenceWidget::setClearButtonShow(QKeySequenceWidget::ClearButtonShow 
 }
 
 /*!
-  Return mode of clear button dosplay.
-  \param show Display mode of clear button (NoShow, ShowLeft or ShorRight)
+  Return mode of clear button display.
+  \param show Display mode of clear button (NoShow, ShowLeft or ShowRight)
   \sa setClearButtonShow
 */
 QKeySequenceWidget::ClearButtonShow QKeySequenceWidget::clearButtonShow() const
@@ -150,13 +152,23 @@ QKeySequenceWidget::ClearButtonShow QKeySequenceWidget::clearButtonShow() const
  */
 void QKeySequenceWidget::setKeySequence(const QKeySequence& key)
 {
-    if (d_ptr->isRecording == false)
+    if (!d_ptr->isRecording)
     {
         d_ptr->oldSequence = d_ptr->currentSequence;
     }
 
     d_ptr->currentSequence = key;
+    d_ptr->updateShortcutButtonColor();
     d_ptr->doneRecording();
+}
+
+/*!
+    Set the default key sequence.
+    \param key Key sequence
+ */
+void QKeySequenceWidget::setDefaultKeySequence(const QKeySequence& key)
+{
+    d_ptr->defaultSequence = key;
 }
 
 /*!
@@ -171,12 +183,23 @@ QKeySequence QKeySequenceWidget::keySequence() const
 }
 
 /*!
+    Get default key sequence.
+    \return Default key sequence
+    \sa setDefaultKeySequence
+ */
+QKeySequence QKeySequenceWidget::defaultKeySequence() const
+{
+    return d_ptr->defaultSequence;
+}
+
+/*!
     Clear key sequence.
     \sa setKeySequence
  */
 void QKeySequenceWidget::clearKeySequence()
 {
     d_ptr->clearSequence();
+    d_ptr->updateShortcutButtonColor();
 }
 
 /*!
@@ -193,7 +216,7 @@ void QKeySequenceWidget::captureKeySequence()
     \param text Text string
     \sa noneText
  */
-void QKeySequenceWidget::setNoneText(const QString text)
+void QKeySequenceWidget::setNoneText(const QString& text)
 {
     d_ptr->noneSequenceText = text;
     d_ptr->updateDisplayShortcut();
@@ -240,13 +263,34 @@ SLOT(clearKeySequence()));
 
 }
 
+QColor QKeySequenceWidget::shortcutButtonActiveColor() const {
+    return d_ptr->shortcutButtonActiveColor;
+}
+
+QColor QKeySequenceWidget::shortcutButtonInactiveColor() const {
+    return d_ptr->shortcutButtonInactiveColor;
+}
+
+void QKeySequenceWidget::setShortcutButtonActiveColor(const QColor &color) {
+    d_ptr->shortcutButtonActiveColor = color;
+}
+
+void QKeySequenceWidget::setShortcutButtonInactiveColor(const QColor &color) {
+    d_ptr->shortcutButtonInactiveColor = color;
+}
+
 // Private class implementation
 
 QKeySequenceWidgetPrivate::QKeySequenceWidgetPrivate()
-    : layout(NULL), clearButton(NULL), shortcutButton(NULL)
+    : layout(nullptr), clearButton(nullptr), shortcutButton(nullptr)
 {
     Q_Q(QKeySequenceWidget);
     Q_UNUSED(q);
+    defaultSequence = QKeySequence();
+
+    QPalette palette;
+    shortcutButtonActiveColor = palette.color(QPalette::ButtonText);
+    shortcutButtonInactiveColor = palette.color(QPalette::Mid);
 }
 
 QKeySequenceWidgetPrivate::~QKeySequenceWidgetPrivate()
@@ -254,12 +298,12 @@ QKeySequenceWidgetPrivate::~QKeySequenceWidgetPrivate()
 
 }
 
-void QKeySequenceWidgetPrivate::init(const QKeySequence keySeq, const QString noneStr)
+void QKeySequenceWidgetPrivate::init(const QKeySequence& keySeq, const QString& noneStr)
 {
     Q_Q(QKeySequenceWidget);
     Q_UNUSED(q);
     layout = new QHBoxLayout(q_func());
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(1);
 
     clearButton = new QToolButton(q_func());
@@ -269,7 +313,7 @@ void QKeySequenceWidgetPrivate::init(const QKeySequence keySeq, const QString no
 
     shortcutButton = new QShortcutButton(this, q_func());
 
-    if (noneStr.isNull() == true)
+    if (noneStr.isNull())
     {
         noneSequenceText = "...";
     }
@@ -298,11 +342,12 @@ void QKeySequenceWidgetPrivate::init(const QKeySequence keySeq, const QString no
     updateView();
 }
 
-// set tooltip only for seqyence button
-void QKeySequenceWidgetPrivate::setToolTip(const QString &tip)
+// set tooltip only for the buttons
+void QKeySequenceWidgetPrivate::setToolTip(const QString &shortcutButtonText,
+                                           const QString &clearButtonText)
 {
-    shortcutButton->setToolTip(tip);
-    clearButton->setToolTip("");
+    shortcutButton->setToolTip(shortcutButtonText);
+    clearButton->setToolTip(clearButtonText);
 }
 
 // update the location of widgets
@@ -350,13 +395,13 @@ void QKeySequenceWidgetPrivate::doneRecording()
 {
     modifierlessTimeout.stop();
 
-    if (isRecording == true)
+    if (isRecording)
     {
 	emit q_ptr->keySequenceAccepted(currentSequence);
     }
     else
     {
-	if (oldSequence.isEmpty() != true)
+	if (!oldSequence.isEmpty())
 	{
 	    emit q_ptr->keySequenceChanged(currentSequence);
 	}
@@ -386,7 +431,9 @@ inline void QKeySequenceWidgetPrivate::cancelRecording()
 
 inline void QKeySequenceWidgetPrivate::clearSequence()
 {
-    q_ptr->setKeySequence(QKeySequence());
+    q_ptr->setKeySequence(q_ptr->defaultKeySequence().isEmpty() ?
+                          QKeySequence() :
+                          q_ptr->defaultKeySequence());
     emit q_ptr->keySequenceCleared();
 }
 
@@ -410,17 +457,31 @@ inline void QKeySequenceWidgetPrivate::keyNotSupported()
     Q_EMIT q_ptr->keyNotSupported();
 }
 
+/*!
+    Updates the shortcut button color
+ */
+void QKeySequenceWidgetPrivate::updateShortcutButtonColor() {
+    QColor color = (!defaultSequence.isEmpty() &&
+            currentSequence == defaultSequence) || currentSequence.isEmpty() ?
+                   shortcutButtonInactiveColor :
+                   shortcutButtonActiveColor;
+    QString colorName = color.name();
+
+    shortcutButton->setStyleSheet(
+            QString("QShortcutButton {color: %1}").arg(colorName));
+}
+
 void QKeySequenceWidgetPrivate::updateDisplayShortcut()
 {
     // empty string if no non-modifier was pressed
     QString str = currentSequence.toString(QKeySequence::NativeText);
     str.replace('&', QLatin1String("&&"));  // TODO -- check it
 
-    if (isRecording == true)
+    if (isRecording)
     {
         if (modifierKeys)
         {
-            if (str.isEmpty() == false)
+            if (!str.isEmpty())
                 str.append(",");
 
             if ((modifierKeys & Qt::META) )
@@ -441,12 +502,14 @@ void QKeySequenceWidgetPrivate::updateDisplayShortcut()
     }
 
     // if is noting
-    if (str.isEmpty() == true)
+    if (str.isEmpty())
     {
         str = noneSequenceText;
     }
 
     shortcutButton->setText(str);
+
+    updateShortcutButtonColor();
 }
 
 
@@ -458,7 +521,7 @@ QSize QShortcutButton::sizeHint() const
 
 bool QShortcutButton::event(QEvent *e)
 {
-    if (d->isRecording == true && e->type() == QEvent::KeyPress)
+    if (d->isRecording && e->type() == QEvent::KeyPress)
     {
         keyPressEvent(static_cast<QKeyEvent*>(e));
         return true;
@@ -470,7 +533,7 @@ bool QShortcutButton::event(QEvent *e)
         return true;
     }
 
-    if (d->isRecording == true && e->type() == QEvent::FocusOut)
+    if (d->isRecording && e->type() == QEvent::FocusOut)
     {
         d->cancelRecording();
         return true;
@@ -482,6 +545,15 @@ bool QShortcutButton::event(QEvent *e)
 void QShortcutButton::keyPressEvent(QKeyEvent *keyEvent)
 {
     int keyQt =  keyEvent->key();
+//    qDebug() << __func__ << " - 'keyQt': " << keyQt;
+    uint modifiers = keyEvent->modifiers();
+
+    // Workaround for Meta key
+    if (keyQt == Qt::Key_Super_L ) {
+        keyQt = Qt::Key_Meta;
+        // Doesn't seem to do anything
+//        modifiers |= Qt::META;
+    }
 
 // Qt sometimes returns garbage keycodes, I observed -1,
 // if it doesn't know a key.
@@ -490,24 +562,23 @@ void QShortcutButton::keyPressEvent(QKeyEvent *keyEvent)
 // and QKeySequence.toString() will also yield a garbage string.
     if (keyQt == -1)
     {
-        // keu moy supported in Qt
+        // key not supported in Qt
         d->cancelRecording();
         d->keyNotSupported();
-
     }
 
     //get modifiers key
-    uint newModifiers = keyEvent->modifiers() & (Qt::SHIFT | Qt::CTRL | Qt::ALT
+    uint newModifiers = modifiers & (Qt::SHIFT | Qt::CTRL | Qt::ALT
 | Qt::META);
 
     // block autostart capturing on key_return or key space press
-    if (d->isRecording == false && (keyQt == Qt::Key_Return || keyQt == Qt::Key_Space))
+    if (!d->isRecording && (keyQt == Qt::Key_Return || keyQt == Qt::Key_Space))
     {
         return;
     }
 
     // We get events even if recording isn't active.
-    if (d->isRecording == false)
+    if (!d->isRecording)
     {
         return QPushButton::keyPressEvent(keyEvent);
     }
@@ -551,7 +622,7 @@ void QShortcutButton::keyPressEvent(QKeyEvent *keyEvent)
                 d->currentSequence = QKeySequence(keyQt);
             }
 
-            d->numKey++; // increment nuber of pressed keys
+            d->numKey++; // increment number of pressed keys
 
             if (d->numKey >= 4)
             {
@@ -574,14 +645,24 @@ void QShortcutButton::keyReleaseEvent(QKeyEvent *keyEvent)
     }
 
     // if not recording mode
-    if (d->isRecording == false)
+    if (!d->isRecording)
     {
         return QPushButton::keyReleaseEvent(keyEvent);
     }
 
     keyEvent->accept();
+    uint modifiers = keyEvent->modifiers();
 
-    uint newModifiers = keyEvent->modifiers() & (Qt::SHIFT | Qt::CTRL | Qt::ALT | Qt::META);
+    // Doesn't seem to to anything yet
+//    const int keyQt =  keyEvent->key();
+//
+//    if (keyQt == Qt::Key_Super_L ) {
+//        qDebug() << __func__ << " - 'modifiers before': " << modifiers;
+//        modifiers |= Qt::META;
+//        qDebug() << __func__ << " - 'modifiers after': " << modifiers;
+//    }
+
+    uint newModifiers = modifiers & (Qt::SHIFT | Qt::CTRL | Qt::ALT | Qt::META);
 
     // if a modifier that belongs to the shortcut was released...
     if ((newModifiers & d->modifierKeys) < d->modifierKeys)

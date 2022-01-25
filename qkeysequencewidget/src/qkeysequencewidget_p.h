@@ -59,7 +59,7 @@ class QKeySequenceWidget;
 class QKeySequenceWidgetPrivate // : public QObject
 {
     //Q_OBJECT
-    Q_DECLARE_PUBLIC(QKeySequenceWidget);
+    Q_DECLARE_PUBLIC(QKeySequenceWidget)
 
 public:
     QKeySequenceWidget * q_ptr;
@@ -67,7 +67,7 @@ public:
     QKeySequenceWidgetPrivate();
     virtual ~QKeySequenceWidgetPrivate();
 
-    void init(const QKeySequence keySeq, const QString noneStr);
+    void init(const QKeySequence& keySeq, const QString& noneStr);
     void updateView();
 
     void startRecording();
@@ -82,6 +82,7 @@ public:
     // members
     QKeySequence currentSequence;
     QKeySequence oldSequence;
+    QKeySequence defaultSequence;
     QString noneSequenceText;
 
     QTimer modifierlessTimeout;
@@ -89,16 +90,20 @@ public:
     quint32 numKey;
     quint32 modifierKeys;
 
-    void setToolTip(const QString& tip);
+    void setToolTip(const QString &shortcutButtonText = QString(""),
+                    const QString &clearButtonText = QString(""));
 
     QHBoxLayout *layout;
     QToolButton *clearButton;
     QShortcutButton *shortcutButton;
+    QColor shortcutButtonActiveColor;
+    QColor shortcutButtonInactiveColor;
 
     int showClearButton;
 
     bool isRecording;
 
+    void updateShortcutButtonColor();
 };
 
 class QShortcutButton : public QPushButton
